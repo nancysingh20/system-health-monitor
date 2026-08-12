@@ -1,7 +1,14 @@
+```bash
 #!/bin/bash
 
 set -euo pipefail
+
 OVERALL_STATUS="HEALTHY"
+
+# ==================================================
+# System Health Monitor
+# Author : Nancy Singh
+# ==================================================
 
 print_header() {
     echo "========================================================"
@@ -20,6 +27,7 @@ system_info() {
 cpu_info() {
     echo
     echo "---------------- CPU Statistics ----------------"
+
     vmstat
 
     CPU_USAGE=$(vmstat 1 2 | tail -1 | awk '{print 100 - $15}')
@@ -29,7 +37,7 @@ cpu_info() {
 
     if [ "$CPU_USAGE" -ge 80 ]; then
         echo "CRITICAL: CPU usage is above 80%."
-    OVERALL_STATUS="CRITICAL"
+        OVERALL_STATUS="CRITICAL"
     else
         echo "HEALTHY: CPU usage is below 80%."
     fi
@@ -38,6 +46,7 @@ cpu_info() {
 memory_info() {
     echo
     echo "---------------- Memory Usage ----------------"
+
     free -h
 
     MEMORY_USAGE=$(free | awk '/Mem:/ {
@@ -49,7 +58,7 @@ memory_info() {
 
     if [ "$MEMORY_USAGE" -ge 80 ]; then
         echo "CRITICAL: Memory usage is above 80%."
-    OVERALL_STATUS="CRITICAL"
+        OVERALL_STATUS="CRITICAL"
     else
         echo "HEALTHY: Memory usage is below 80%."
     fi
@@ -58,16 +67,20 @@ memory_info() {
 disk_info() {
     echo
     echo "---------------- Disk Usage ----------------"
+
     df -h
 
-    DISK_USAGE=$(df / | awk 'NR==2 {gsub("%",""); print $5}')
+    DISK_USAGE=$(df / | awk 'NR==2 {
+        gsub("%","")
+        print $5
+    }')
 
     echo
     echo "Root Disk Usage: ${DISK_USAGE}%"
 
     if [ "$DISK_USAGE" -ge 80 ]; then
         echo "CRITICAL: Disk usage is above 80%."
-        return 1
+        OVERALL_STATUS="CRITICAL"
     else
         echo "HEALTHY: Disk usage is below 80%."
     fi
@@ -87,22 +100,37 @@ generate_report() {
     disk_info
     uptime_info
 
-echo
-echo "========================================================"
-echo "OVERALL SYSTEM HEALTH: $OVERALL_STATUS"
-echo "========================================================"
+    echo
+    echo "========================================================"
+    echo "OVERALL SYSTEM HEALTH: $OVERALL_STATUS"
+    echo "========================================================"
 }
+
+# ==================================================
+# Generate and Save Report
+# ==================================================
+
+generate_report > health_report.txt
+
+# Display the generated report in Jenkins console
+cat health_report.txt
+
+# ==================================================
+# Determine Pipeline Result
+# ==================================================
 
 if [ "$OVERALL_STATUS" = "CRITICAL" ]; then
     echo
     echo "System health check failed."
+    echo "One or more system resources exceeded the threshold."
     exit 1
 fi
-
-generate_report | tee health_report.txt
 
 echo
 echo "========================================================"
 echo "Health report generated successfully."
 echo "Report saved as: health_report.txt"
 echo "========================================================"
+
+exit 0
+```
