@@ -30,6 +30,20 @@ pipeline {
     failure {
         echo 'SYSTEM HEALTH: CRITICAL'
         echo 'System health check failed.'
+
+        emailext(
+            subject: "CRITICAL: System Health Check Failed - ${env.JOB_NAME} #${env.BUILD_NUMBER}",
+            body: """
+System Health Monitor detected a critical condition.
+
+Job: ${env.JOB_NAME}
+Build: #${env.BUILD_NUMBER}
+Build URL: ${env.BUILD_URL}
+
+Please check the Jenkins console output and health report.
+""",
+            to: "YOUR_EMAIL@example.com"
+        )
     }
 
     always {
