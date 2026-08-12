@@ -1,4 +1,3 @@
-```bash
 #!/bin/bash
 
 set -euo pipefail
@@ -107,12 +106,12 @@ generate_report() {
 }
 
 # ==================================================
-# Generate and Save Report
+# Generate Report
 # ==================================================
 
 generate_report > health_report.txt
 
-# Display the generated report in Jenkins console
+# Display report in Jenkins console
 cat health_report.txt
 
 # ==================================================
@@ -127,10 +126,7 @@ if [ "$OVERALL_STATUS" = "CRITICAL" ]; then
 fi
 
 echo
-echo "========================================================"
 echo "Health report generated successfully."
 echo "Report saved as: health_report.txt"
-echo "========================================================"
 
 exit 0
-```
