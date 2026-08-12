@@ -4,6 +4,10 @@ set -euo pipefail
 
 OVERALL_STATUS="HEALTHY"
 
+CPU_THRESHOLD="${CPU_THRESHOLD:-80}"
+MEMORY_THRESHOLD="${MEMORY_THRESHOLD:-80}"
+DISK_THRESHOLD="${DISK_THRESHOLD:-80}"
+
 # ==================================================
 # System Health Monitor
 # Author : Nancy Singh
@@ -34,8 +38,8 @@ cpu_info() {
     echo
     echo "CPU Usage: ${CPU_USAGE}%"
 
-    if [ "$CPU_USAGE" -ge 80 ]; then
-        echo "CRITICAL: CPU usage is above 80%."
+    if [ "$CPU_USAGE" -ge "$CPU_THRESHOLD" ]; then
+        echo "CRITICAL: CPU usage is above ${CPU_THRESHOLD}%."
         OVERALL_STATUS="CRITICAL"
     else
         echo "HEALTHY: CPU usage is below 80%."
@@ -55,8 +59,8 @@ memory_info() {
     echo
     echo "Memory Usage: ${MEMORY_USAGE}%"
 
-    if [ "$MEMORY_USAGE" -ge 80 ]; then
-        echo "CRITICAL: Memory usage is above 80%."
+    if [ "$MEMORY_USAGE" -ge "$MEMORY_THRESHOLD" ]; then
+       echo "CRITICAL: Memory usage is above ${MEMORY_THRESHOLD}%."
         OVERALL_STATUS="CRITICAL"
     else
         echo "HEALTHY: Memory usage is below 80%."
@@ -77,8 +81,8 @@ disk_info() {
     echo
     echo "Root Disk Usage: ${DISK_USAGE}%"
 
-    if [ "$DISK_USAGE" -ge 80 ]; then
-        echo "CRITICAL: Disk usage is above 80%."
+    if [ "$DISK_USAGE" -ge "$DISK_THRESHOLD" ]; then
+       echo "CRITICAL: Disk usage is above ${DISK_THRESHOLD}%."
         OVERALL_STATUS="CRITICAL"
     else
         echo "HEALTHY: Disk usage is below 80%."
