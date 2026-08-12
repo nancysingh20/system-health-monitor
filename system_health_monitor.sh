@@ -1,4 +1,3 @@
-```bash
 #!/bin/bash
 
 set -euo pipefail
@@ -78,4 +77,3 @@ echo "========================================================"
 echo "Health report generated successfully."
 echo "Report saved as: health_report.txt"
 echo "========================================================"
-```
