@@ -1,79 +1,37 @@
-#!/bin/bash
+pipeline {
+    agent any
 
-set -euo pipefail
+    stages {
+        stage('Checkout') {
+            steps {
+                checkout scm
+            }
+        }
 
-# ==================================================
-# System Health Monitor
-# Author : Nancy Singh
-#
-# Description:
-# Displays important system information including
-# hostname, current user, memory usage, disk usage,
-# CPU statistics, and uptime.
-# ==================================================
+        stage('System Health Check') {
+            steps {
+                sh '''
+                    chmod +x system_health_monitor.sh
+                    ./system_health_monitor.sh
+                '''
+            }
+        }
+    }
 
-# Display Header
-print_header() {
-    echo "========================================================"
-    echo "               SYSTEM HEALTH MONITOR"
-    echo "========================================================"
+    post {
+        success {
+            echo 'System health check completed successfully.'
+
+            archiveArtifacts artifacts: 'health_report.txt',
+                             fingerprint: true
+        }
+
+        failure {
+            echo 'System health check failed.'
+        }
+
+        always {
+            echo 'Pipeline execution completed.'
+        }
+    }
 }
-
-# Display Basic System Information
-system_info() {
-    echo
-    echo "---------------- System Information ----------------"
-    echo "Hostname      : $(hostname)"
-    echo "Current User  : $(whoami)"
-    echo "Current Date  : $(date)"
-}
-
-# Display CPU Information
-cpu_info() {
-    echo
-    echo "---------------- CPU Statistics ----------------"
-    vmstat
-}
-
-# Display Memory Information
-memory_info() {
-    echo
-    echo "---------------- Memory Usage ----------------"
-    free -h
-}
-
-# Display Disk Information
-disk_info() {
-    echo
-    echo "---------------- Disk Usage ----------------"
-    df -h
-}
-
-# Display System Uptime
-uptime_info() {
-    echo
-    echo "---------------- System Uptime ----------------"
-    uptime
-}
-
-# Generate Report
-generate_report() {
-    print_header
-    system_info
-    cpu_info
-    memory_info
-    disk_info
-    uptime_info
-}
-
-# ==================================================
-# Execute Script and Save Output
-# ==================================================
-
-generate_report | tee health_report.txt
-
-echo
-echo "========================================================"
-echo "Health report generated successfully."
-echo "Report saved as: health_report.txt"
-echo "========================================================"
