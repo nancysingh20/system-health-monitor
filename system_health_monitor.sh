@@ -93,6 +93,12 @@ echo "OVERALL SYSTEM HEALTH: $OVERALL_STATUS"
 echo "========================================================"
 }
 
+if [ "$OVERALL_STATUS" = "CRITICAL" ]; then
+    echo
+    echo "System health check failed."
+    exit 1
+fi
+
 generate_report | tee health_report.txt
 
 echo
