@@ -72,3 +72,19 @@ echo "Health report generated successfully."
 echo "Report saved as: health_report.txt"
 echo "Health report generated successfully."
 echo "Report saved as: health_report.txt"
+post {
+    success {
+        echo 'System health check completed successfully.'
+
+        archiveArtifacts artifacts: 'health_report.txt',
+                         fingerprint: true
+    }
+
+    failure {
+        echo 'System health check failed.'
+    }
+
+    always {
+        echo 'Pipeline execution completed.'
+    }
+}
