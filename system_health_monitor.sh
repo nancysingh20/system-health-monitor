@@ -1,6 +1,7 @@
 #!/bin/bash
 
 set -euo pipefail
+OVERALL_STATUS="HEALTHY"
 
 print_header() {
     echo "========================================================"
@@ -28,7 +29,7 @@ cpu_info() {
 
     if [ "$CPU_USAGE" -ge 80 ]; then
         echo "CRITICAL: CPU usage is above 80%."
-        return 1
+    OVERALL_STATUS="CRITICAL"
     else
         echo "HEALTHY: CPU usage is below 80%."
     fi
@@ -48,7 +49,7 @@ memory_info() {
 
     if [ "$MEMORY_USAGE" -ge 80 ]; then
         echo "CRITICAL: Memory usage is above 80%."
-        return 1
+    OVERALL_STATUS="CRITICAL"
     else
         echo "HEALTHY: Memory usage is below 80%."
     fi
@@ -85,6 +86,11 @@ generate_report() {
     memory_info
     disk_info
     uptime_info
+
+echo
+echo "========================================================"
+echo "OVERALL SYSTEM HEALTH: $OVERALL_STATUS"
+echo "========================================================"
 }
 
 generate_report | tee health_report.txt
