@@ -26,6 +26,20 @@ memory_info() {
     echo
     echo "---------------- Memory Usage ----------------"
     free -h
+
+    MEMORY_USAGE=$(free | awk '/Mem:/ {
+        printf "%.0f", ($3 / $2) * 100
+    }')
+
+    echo
+    echo "Memory Usage: ${MEMORY_USAGE}%"
+
+    if [ "$MEMORY_USAGE" -ge 80 ]; then
+        echo "CRITICAL: Memory usage is above 80%."
+        return 1
+    else
+        echo "HEALTHY: Memory usage is below 80%."
+    fi
 }
 
 disk_info() {
