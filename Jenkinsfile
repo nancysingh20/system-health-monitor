@@ -19,19 +19,21 @@ pipeline {
     }
 
     post {
-        success {
-            echo 'System health check completed successfully.'
+    success {
+        echo 'SYSTEM HEALTH: HEALTHY'
+        echo 'System health check completed successfully.'
 
-            archiveArtifacts artifacts: 'health_report.txt',
-                             fingerprint: true
-        }
-
-        failure {
-            echo 'System health check failed.'
-        }
-
-        always {
-            echo 'Pipeline execution completed.'
-        }
+        archiveArtifacts artifacts: 'health_report.txt',
+                         fingerprint: true
     }
+
+    failure {
+        echo 'SYSTEM HEALTH: CRITICAL'
+        echo 'System health check failed.'
+    }
+
+    always {
+        echo 'Pipeline execution completed.'
+    }
+}
 }
