@@ -21,6 +21,9 @@ pipeline {
     post {
         success {
             echo 'System health check completed successfully.'
+
+            archiveArtifacts artifacts: 'health_report.txt',
+                             fingerprint: true
         }
 
         failure {
