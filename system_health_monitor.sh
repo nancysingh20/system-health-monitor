@@ -1,3 +1,4 @@
+```bash
 #!/bin/bash
 
 set -euo pipefail
@@ -5,6 +6,7 @@ set -euo pipefail
 # ==================================================
 # System Health Monitor
 # Author : Nancy Singh
+#
 # Description:
 # Displays important system information including
 # hostname, current user, memory usage, disk usage,
@@ -21,6 +23,7 @@ print_header() {
 # Display Basic System Information
 system_info() {
     echo
+    echo "---------------- System Information ----------------"
     echo "Hostname      : $(hostname)"
     echo "Current User  : $(whoami)"
     echo "Current Date  : $(date)"
@@ -64,27 +67,15 @@ generate_report() {
     uptime_info
 }
 
-# Execute Script and save output
+# ==================================================
+# Execute Script and Save Output
+# ==================================================
+
 generate_report | tee health_report.txt
 
 echo
+echo "========================================================"
 echo "Health report generated successfully."
 echo "Report saved as: health_report.txt"
-echo "Health report generated successfully."
-echo "Report saved as: health_report.txt"
-post {
-    success {
-        echo 'System health check completed successfully.'
-
-        archiveArtifacts artifacts: 'health_report.txt',
-                         fingerprint: true
-    }
-
-    failure {
-        echo 'System health check failed.'
-    }
-
-    always {
-        echo 'Pipeline execution completed.'
-    }
-}
+echo "========================================================"
+```
