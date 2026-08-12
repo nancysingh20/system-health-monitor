@@ -32,6 +32,18 @@ disk_info() {
     echo
     echo "---------------- Disk Usage ----------------"
     df -h
+
+    DISK_USAGE=$(df / | awk 'NR==2 {gsub("%",""); print $5}')
+
+    echo
+    echo "Root Disk Usage: ${DISK_USAGE}%"
+
+    if [ "$DISK_USAGE" -ge 80 ]; then
+        echo "CRITICAL: Disk usage is above 80%."
+        return 1
+    else
+        echo "HEALTHY: Disk usage is below 80%."
+    fi
 }
 
 uptime_info() {
