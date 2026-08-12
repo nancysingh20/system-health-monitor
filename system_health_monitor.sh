@@ -1,5 +1,7 @@
 #!/bin/bash
 
+set -euo pipefail
+
 # ==================================================
 # System Health Monitor
 # Author : Nancy Singh
@@ -54,19 +56,19 @@ uptime_info() {
 
 # Generate Report
 generate_report() {
-
     print_header
     system_info
     cpu_info
     memory_info
     disk_info
     uptime_info
+}
 
-} | tee health_report.txt
-
-# Execute Script
-generate_report
+# Execute Script and save output
+generate_report | tee health_report.txt
 
 echo
+echo "Health report generated successfully."
+echo "Report saved as: health_report.txt"
 echo "Health report generated successfully."
 echo "Report saved as: health_report.txt"
