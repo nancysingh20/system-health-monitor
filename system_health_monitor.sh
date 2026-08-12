@@ -20,6 +20,18 @@ cpu_info() {
     echo
     echo "---------------- CPU Statistics ----------------"
     vmstat
+
+    CPU_USAGE=$(vmstat 1 2 | tail -1 | awk '{print 100 - $15}')
+
+    echo
+    echo "CPU Usage: ${CPU_USAGE}%"
+
+    if [ "$CPU_USAGE" -ge 80 ]; then
+        echo "CRITICAL: CPU usage is above 80%."
+        return 1
+    else
+        echo "HEALTHY: CPU usage is below 80%."
+    fi
 }
 
 memory_info() {
