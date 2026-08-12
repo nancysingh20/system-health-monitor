@@ -42,7 +42,7 @@ Build URL: ${env.BUILD_URL}
 
 Please check the Jenkins console output and health report.
 """,
-            to: "YOUR_EMAIL@example.com"
+            to: "ishu200107@gmail.com"
         )
     }
 
